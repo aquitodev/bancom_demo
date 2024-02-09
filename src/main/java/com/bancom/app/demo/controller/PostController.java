@@ -77,6 +77,7 @@ public class PostController {
         }
 
         postActual.setText(post.getText());
+        postActual.setModifyAt(new Date());
         servicePost.save(postActual);
 
         response.put("mensaje", "El Post ha sido actualizado con éxito");

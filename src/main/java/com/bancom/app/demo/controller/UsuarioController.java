@@ -79,6 +79,7 @@ public class UsuarioController {
         userActual.setName(usuario.getName());
         userActual.setLastname(usuario.getLastname());
         userActual.setPassword(usuario.getPassword());
+        userActual.setModifyAt(new Date());
         serviceUsuario.save(userActual);
 
         response.put("mensaje", "El Usuario ha sido actualizado con éxito");

@@ -11,6 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -35,7 +36,12 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createAt;
 
+    @Column(name = "modify_at")
+    @Temporal(TemporalType.DATE)
+    private Date modifyAt;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Post> posts;
 
     public Long getId() {
@@ -92,5 +98,13 @@ public class Usuario implements Serializable {
 
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
+    }
+
+    public Date getModifyAt() {
+        return modifyAt;
+    }
+
+    public void setModifyAt(Date modifyAt) {
+        this.modifyAt = modifyAt;
     }
 }

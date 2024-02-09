@@ -22,10 +22,17 @@ public class Post implements Serializable {
     private Long id;
 
     private String text;
+    
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     private Date createAt;
+
+    @Column(name = "modify_at")
+    @Temporal(TemporalType.DATE)
+    private Date modifyAt;
 
     public Long getId() {
         return id;
@@ -50,4 +57,21 @@ public class Post implements Serializable {
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Date getModifyAt() {
+        return modifyAt;
+    }
+
+    public void setModifyAt(Date modifyAt) {
+        this.modifyAt = modifyAt;
+    }
+    
 }
