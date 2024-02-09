@@ -39,6 +39,8 @@ public class ServiceUsuarioImpl implements IServiceUsuario {
     @Override
     @Transactional
     public void delete(Long id) {
+        if (id == null) return;
+        
         this.usuarioDao.deleteById(id);
     }
 
