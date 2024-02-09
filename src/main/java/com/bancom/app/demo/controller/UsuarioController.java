@@ -36,6 +36,11 @@ public class UsuarioController {
         return serviceUsuario.findAll();
     }
 
+    @GetMapping("/usuario/login")
+    public Usuario login(@RequestBody Usuario usuario) {
+        return serviceUsuario.login(usuario);
+    }
+
     @PostMapping("/usuario")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@RequestBody Usuario usuario) {

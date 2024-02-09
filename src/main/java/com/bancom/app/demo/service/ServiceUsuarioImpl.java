@@ -41,4 +41,10 @@ public class ServiceUsuarioImpl implements IServiceUsuario {
     public void delete(Long id) {
         this.usuarioDao.deleteById(id);
     }
+
+    @Override
+    public Usuario login(Usuario usuario) {
+        System.out.println(usuario.toString());
+        return this.usuarioDao.login(usuario.getNickname(), usuario.getPassword());
+    }
 }

@@ -30,6 +30,8 @@ public class Usuario implements Serializable {
     private String name;
 
     private String lastname;
+
+    private String nickname;
     private String password;
 
     @Column(name = "create_at")
@@ -106,5 +108,20 @@ public class Usuario implements Serializable {
 
     public void setModifyAt(Date modifyAt) {
         this.modifyAt = modifyAt;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario [cellphone=" + cellphone + ", name=" + name + ", lastname=" + lastname + ", nickname="
+                + nickname + ", password=" + password + ", createAt=" + createAt + ", modifyAt=" + modifyAt + ", posts="
+                + posts + "]";
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.bancom.app.demo.model.Usuario;
 
 public interface IServiceUsuario {
+    public Usuario login(Usuario usuario);
     public Usuario findById(Long id);
     public List<Usuario> findAll();
     public Usuario save(Usuario usuario);
