@@ -38,7 +38,6 @@ public class PostController {
         return servicePost.findAll();
     }
 
-    @PreAuthorize("")
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@RequestBody Post post) {
