@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1")
 public class PostController {
+
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
     @Autowired
     private IServicePost servicePost;
@@ -72,10 +77,14 @@ public class PostController {
 
             postNew = servicePost.save(post);
         } catch (DataAccessException e) {
+            log.error("Error al registrar el post en la base de datos para usuario ID: {}. Error: {}", 
+                     userId, e.getMostSpecificCause().getMessage(), e);
             response.put("mensaje", "Error al registrar el post en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
+            log.error("Error al procesar el token para creación de post. Usuario ID: {}. Error: {}", 
+                     userId, e.getMessage(), e);
             response.put("mensaje", "Error al procesar el token");
             response.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
@@ -116,10 +125,14 @@ public class PostController {
             servicePost.save(postActual);
 
         } catch (DataAccessException e) {
+            log.error("Error al actualizar el post ID: {} en la base de datos. Usuario ID: {}. Error: {}", 
+                     id, userId, e.getMostSpecificCause().getMessage(), e);
             response.put("mensaje", "Error al actualizar el post en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
+            log.error("Error al procesar el token para actualización de post ID: {}. Usuario ID: {}. Error: {}", 
+                     id, userId, e.getMessage(), e);
             response.put("mensaje", "Error al procesar el token");
             response.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
@@ -140,6 +153,8 @@ public class PostController {
         try {
             postDelete = servicePost.findById(id);
         } catch (DataAccessException e) {
+            log.error("Error al consultar el post ID: {} en la base de datos. Usuario ID: {}. Error: {}", 
+                     id, userId, e.getMostSpecificCause().getMessage(), e);
             response.put("mensaje", "Error al consultar el post en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
