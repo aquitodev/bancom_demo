@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bancom.app.demo.dto.UsuarioRegistroRequest;
 import com.bancom.app.demo.entities.Usuario;
 import com.bancom.app.demo.service.IServiceUsuario;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -36,17 +39,31 @@ public class UsuarioController {
         return serviceUsuario.findAll();
     }
 
+    @GetMapping("/usuario/{id}")
+    public Usuario get(@PathVariable Long id) {
+        return serviceUsuario.findById(id);
+    }
+
     @PostMapping("/usuario")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> create(@Valid @RequestBody UsuarioRegistroRequest registroRequest) {
         Usuario usuarioNew = null;
         Map<String,Object> response = new HashMap<>();
 
         try {
+            // Mapear DTO a entidad
+            Usuario usuario = new Usuario();
+            usuario.setCellphone(registroRequest.getCellphone());
+            usuario.setName(registroRequest.getName());
+            usuario.setLastname(registroRequest.getLastname());
+            usuario.setNickname(registroRequest.getNickname());
+            usuario.setPassword(registroRequest.getPassword());
             usuario.setCreateAt(new Date());
+            usuario.setActive(true);
+            
             usuarioNew = serviceUsuario.save(usuario);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al realizar la consulta en la base de datos.");
+            response.put("mensaje", "Error al registrar el usuario en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String,Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -66,7 +83,7 @@ public class UsuarioController {
         try {
             userActual = serviceUsuario.findById(id);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al realizar la consulta en la base de datos.");
+            response.put("mensaje", "Error al actualizar el usuario en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String,Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -98,7 +115,7 @@ public class UsuarioController {
         try {
             userDelete = serviceUsuario.findById(id);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al realizar la consulta en la base de datos.");
+            response.put("mensaje", "Error al eliminar el usuario en la base de datos.");
             response.put("error", e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String,Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

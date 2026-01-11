@@ -1,9 +1,9 @@
-package com.bancom.app.demo.security.filter;
+package com.bancom.app.demo.security;
 
-import static com.bancom.app.demo.security.TokenJwtConfig.CONTENT_TYPE;
-import static com.bancom.app.demo.security.TokenJwtConfig.HEADER_AUTHORIZATION;
-import static com.bancom.app.demo.security.TokenJwtConfig.PREFIX_TOKEN;
-import static com.bancom.app.demo.security.TokenJwtConfig.SECRET_KEY;
+import static com.bancom.app.demo.security.JwtTokenConfig.CONTENT_TYPE;
+import static com.bancom.app.demo.security.JwtTokenConfig.HEADER_AUTHORIZATION;
+import static com.bancom.app.demo.security.JwtTokenConfig.PREFIX_TOKEN;
+import static com.bancom.app.demo.security.JwtTokenConfig.SECRET_KEY;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -19,7 +19,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.bancom.app.demo.security.SimpleGrantedAuthorityJsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -53,14 +52,21 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             String username = claims.getSubject();
             Object authoritiesClaims = claims.get("authorities");
 
-            Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                    new ObjectMapper()
-                .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
-                .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class)
-                );
+            Collection<? extends GrantedAuthority> authorities;
+            
+            if (authoritiesClaims != null) {
+                authorities = Arrays.asList(
+                        new ObjectMapper()
+                    .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                    .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class)
+                    );
+            } else {
+                // Si no hay authorities, asignar rol por defecto
+                authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+            }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-            SecurityContextHolder .getContext().setAuthentication(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             chain.doFilter(request, response);
         } catch (JwtException e) {
             Map<String, String> body = new HashMap<>();

@@ -20,7 +20,7 @@ import com.bancom.app.demo.service.IServiceUsuario;
 import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 
-import static com.bancom.app.demo.security.TokenJwtConfig.*;
+import static com.bancom.app.demo.security.JwtTokenConfig.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -46,6 +46,7 @@ public class AuthController {
                 .subject(usuarioLogueado.getNickname())
                 .claim("nickname", usuarioLogueado.getNickname())
                 .claim("id", usuarioLogueado.getId())
+                .claim("authorities", "[{\"authority\":\"ROLE_USER\"}]")
                 .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hora
                 .issuedAt(new Date())
                 .signWith(SECRET_KEY)

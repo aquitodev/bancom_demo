@@ -35,7 +35,7 @@ public class Post implements Serializable {
     private Date modifyAt;
 
     @Column(name = "active")
-    private boolean active;
+    private Boolean active;
 
     public Long getId() {
         return id;
@@ -77,11 +77,11 @@ public class Post implements Serializable {
         this.modifyAt = modifyAt;
     }
     
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }
