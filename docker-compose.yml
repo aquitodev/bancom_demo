@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  bancom-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bancom-microservice
+    ports:
+      - "8005:8005"
+    environment:
+      # Spring Configuration
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8005
+      
+      # Database Configuration (H2 in-memory)
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:bancomdb
+      - SPRING_DATASOURCE_USERNAME=usrdemo
+      - SPRING_DATASOURCE_PASSWORD=demo
+      
+      # JWT Configuration
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-change-in-production}
+      - JWT_EXPIRATION_TIME=3600000
+      
+      # JVM Options
+      - JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseContainerSupport
+    
+    # Recursos del contenedor
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    networks:
+      - bancom-network
+
+networks:
+  bancom-network:
+    driver: bridge

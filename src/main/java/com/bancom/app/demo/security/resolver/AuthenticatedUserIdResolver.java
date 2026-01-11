@@ -1,5 +1,6 @@
 package com.bancom.app.demo.security.resolver;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -9,13 +10,15 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.bancom.app.demo.security.JwtTokenConfig;
 import com.bancom.app.demo.security.annotation.AuthenticatedUserId;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 
-import static com.bancom.app.demo.security.JwtTokenConfig.*;
+import static com.bancom.app.demo.security.JwtTokenConfig.HEADER_AUTHORIZATION;
+import static com.bancom.app.demo.security.JwtTokenConfig.PREFIX_TOKEN;
 
 /**
  * Resolver personalizado que extrae el userId del token JWT
@@ -23,6 +26,9 @@ import static com.bancom.app.demo.security.JwtTokenConfig.*;
  */
 @Component
 public class AuthenticatedUserIdResolver implements HandlerMethodArgumentResolver {
+
+    @Autowired
+    private JwtTokenConfig jwtTokenConfig;
 
     @Override
     public boolean supportsParameter(@NonNull MethodParameter parameter) {
@@ -50,7 +56,7 @@ public class AuthenticatedUserIdResolver implements HandlerMethodArgumentResolve
         // Extraer y parsear el token
         String token = header.replace(PREFIX_TOKEN, "");
         Claims claims = Jwts.parser()
-                .verifyWith(SECRET_KEY)
+                .verifyWith(jwtTokenConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

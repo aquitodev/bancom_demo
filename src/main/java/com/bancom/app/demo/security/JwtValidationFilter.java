@@ -3,7 +3,6 @@ package com.bancom.app.demo.security;
 import static com.bancom.app.demo.security.JwtTokenConfig.CONTENT_TYPE;
 import static com.bancom.app.demo.security.JwtTokenConfig.HEADER_AUTHORIZATION;
 import static com.bancom.app.demo.security.JwtTokenConfig.PREFIX_TOKEN;
-import static com.bancom.app.demo.security.JwtTokenConfig.SECRET_KEY;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,8 +30,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
-    public JwtValidationFilter(AuthenticationManager authenticationManager) {
+    private final JwtTokenConfig jwtTokenConfig;
+
+    public JwtValidationFilter(AuthenticationManager authenticationManager, JwtTokenConfig jwtTokenConfig) {
         super(authenticationManager);
+        this.jwtTokenConfig = jwtTokenConfig;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
         String token = header.replace(PREFIX_TOKEN, "");
 
         try {
-            Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
+            Claims claims = Jwts.parser().verifyWith(jwtTokenConfig.getSecretKey()).build().parseSignedClaims(token).getPayload();
             String username = claims.getSubject();
             Object authoritiesClaims = claims.get("authorities");
 
@@ -78,5 +80,4 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             response.setContentType(CONTENT_TYPE);
         }
     }
-
 }

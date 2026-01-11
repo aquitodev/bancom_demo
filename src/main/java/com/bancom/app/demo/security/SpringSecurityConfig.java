@@ -24,6 +24,9 @@ public class SpringSecurityConfig {
     
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
+    
+    @Autowired
+    private JwtTokenConfig jwtTokenConfig;
 
     @Bean
     AuthenticationManager authenticationManager() throws Exception {
@@ -49,7 +52,7 @@ public class SpringSecurityConfig {
                         // Todas las demás rutas requieren autenticación
                         .anyRequest().authenticated()
                 )
-                .addFilter(new JwtValidationFilter(authenticationManager()))
+                .addFilter(new JwtValidationFilter(authenticationManager(), jwtTokenConfig))
                 .build();
     }
 
