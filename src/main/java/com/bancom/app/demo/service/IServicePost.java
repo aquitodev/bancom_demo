@@ -2,7 +2,7 @@ package com.bancom.app.demo.service;
 
 import java.util.List;
 
-import com.bancom.app.demo.model.Post;
+import com.bancom.app.demo.entities.Post;
 
 public interface IServicePost {
     public Post findById(Long id);

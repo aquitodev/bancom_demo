@@ -55,8 +55,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
             Collection<? extends GrantedAuthority> authorities = Arrays.asList(
                     new ObjectMapper()
-                .addMixIn(SimpleGrantedAuthority.class, 
-                                    SimpleGrantedAuthorityJsonCreator.class)
+                .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
                 .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class)
                 );
 

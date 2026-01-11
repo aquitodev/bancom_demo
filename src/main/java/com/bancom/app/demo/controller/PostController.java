@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bancom.app.demo.entities.Post;
 import com.bancom.app.demo.service.IServicePost;
-
-import com.bancom.app.demo.model.Post;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -33,11 +31,13 @@ public class PostController {
     @Autowired
     private IServicePost servicePost;
 
+    // API private para listar posts
     @GetMapping("/post/list")
     public List<Post> list() {
         return servicePost.findAll();
     }
 
+    // API private para crear post
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@RequestBody Post post) {
@@ -58,6 +58,7 @@ public class PostController {
         return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
     }
 
+    // Api private para actualizar post
     @PutMapping("/post/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> update(@RequestBody Post post, @PathVariable Long id) {
@@ -86,6 +87,7 @@ public class PostController {
         return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
     }
 
+    // Api private para eliminar post
     @DeleteMapping("/post/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> delete(@PathVariable Long id) {

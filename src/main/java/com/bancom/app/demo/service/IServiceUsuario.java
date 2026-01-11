@@ -2,12 +2,13 @@ package com.bancom.app.demo.service;
 
 import java.util.List;
 
-import com.bancom.app.demo.model.Usuario;
+import com.bancom.app.demo.entities.Usuario;
 
 public interface IServiceUsuario {
-    public Usuario login(Usuario usuario);
     public Usuario findById(Long id);
     public List<Usuario> findAll();
     public Usuario save(Usuario usuario);
     public void delete(Long id);
+    public Usuario login(Usuario usuario);
+    public Usuario findByNickname(String nickname);
 }

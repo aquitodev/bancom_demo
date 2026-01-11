@@ -6,14 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bancom.app.demo.dao.UsuarioDao;
-import com.bancom.app.demo.model.Usuario;
+import com.bancom.app.demo.repository.UsuarioRepository;
+import com.bancom.app.demo.entities.Usuario;
 
 @Service
 public class ServiceUsuarioImpl implements IServiceUsuario {
 
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioRepository usuarioDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -24,6 +24,7 @@ public class ServiceUsuarioImpl implements IServiceUsuario {
     @Override
     @Transactional(readOnly = true)
     public Usuario findById(Long id) {
+        if (id == null) return null;
         return this.usuarioDao.findById(id).orElse(null);
     }
 
@@ -39,14 +40,20 @@ public class ServiceUsuarioImpl implements IServiceUsuario {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (id == null) return;
-        
-        this.usuarioDao.deleteById(id);
+        Usuario usuario = this.findById(id);
+        if (usuario == null) return;
+
+        usuario.setActive(false);
+        this.usuarioDao.save(usuario);
     }
 
     @Override
     public Usuario login(Usuario usuario) {
-        System.out.println(usuario.toString());
         return this.usuarioDao.login(usuario.getNickname(), usuario.getPassword());
+    }
+
+    @Override
+    public Usuario findByNickname(String nickname) {
+        return this.usuarioDao.findByNickname(nickname).orElse(null);
     }
 }

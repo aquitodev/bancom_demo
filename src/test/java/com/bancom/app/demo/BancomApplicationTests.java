@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.bancom.app.demo.dao.UsuarioDao;
-import com.bancom.app.demo.model.Usuario;
+import com.bancom.app.demo.repository.UsuarioRepository;
+import com.bancom.app.demo.entities.Usuario;
 import com.bancom.app.demo.service.IServiceUsuario;
 
 @SpringBootTest
-class DemoApplicationTests {
+class BancomApplicationTests {
 
 	@MockBean
-	UsuarioDao usuarioDao;
+	UsuarioRepository usuarioDao;
 
 	@Autowired
     IServiceUsuario serviceUsuario;
@@ -33,7 +33,4 @@ class DemoApplicationTests {
 		//assertEquals(usuarioLogin.getId(), usuarioFind1.getId());
 		assertEquals(usuarioLogin, usuarioFind1);
 	}
-
-	
-
 }

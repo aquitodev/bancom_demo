@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bancom.app.demo.entities.Usuario;
 import com.bancom.app.demo.service.IServiceUsuario;
-import com.bancom.app.demo.model.Usuario;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -34,11 +34,6 @@ public class UsuarioController {
     @GetMapping("/usuario/list")
     public List<Usuario> list() {
         return serviceUsuario.findAll();
-    }
-
-    @GetMapping("/usuario/login")
-    public Usuario login(@RequestBody Usuario usuario) {
-        return serviceUsuario.login(usuario);
     }
 
     @PostMapping("/usuario")
@@ -61,6 +56,7 @@ public class UsuarioController {
         return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
     }
 
+    // Api private para actualizar usuario
     @PutMapping("/usuario/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> update(@RequestBody Usuario usuario, @PathVariable Long id) {
@@ -92,6 +88,7 @@ public class UsuarioController {
         return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
     }
 
+    // Api private para eliminar usuario
     @DeleteMapping("/usuario/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> delete(@PathVariable Long id) {

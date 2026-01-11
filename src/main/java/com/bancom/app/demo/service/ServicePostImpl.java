@@ -6,25 +6,26 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bancom.app.demo.dao.PostDao;
-import com.bancom.app.demo.model.Post;
+import com.bancom.app.demo.repository.PostRepository;
+import com.bancom.app.demo.entities.Post;
 
 @Service
 public class ServicePostImpl implements IServicePost {
 
     @Autowired
-    private PostDao postDao;
+    private PostRepository postRepository;
 
     @Override
     @Transactional(readOnly = true)
     public List<Post> findAll() {
-        return (List<Post>) this.postDao.findAll();
+        return (List<Post>) this.postRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Post findById(Long id) {
-        return this.postDao.findById(id).orElse(null);
+        if (id == null) return null;
+        return this.postRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -32,14 +33,17 @@ public class ServicePostImpl implements IServicePost {
     public Post save(Post post) {
         if (post == null) return null;
 
-        Post postSaved = this.postDao.save(post);
+        Post postSaved = this.postRepository.save(post);
         return postSaved;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        this.postDao.deleteById(id);
+        Post post = this.findById(id);
+        if (post == null) return;
+        
+        post.setActive(false);
+        this.postRepository.save(post);
     }
-    
 }
