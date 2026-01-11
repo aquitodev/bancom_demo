@@ -19,7 +19,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=demo
       
       # JWT Configuration
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-change-in-production}
+      - JWT_SECRET_KEY=YourSecretKeyHere
       - JWT_EXPIRATION_TIME=3600000
       
       # JVM Options
